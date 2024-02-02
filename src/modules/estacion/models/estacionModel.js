@@ -17,11 +17,11 @@ async function addEstacion(estacion) {
       esta_propietarioterreno,
       esta_propietarioinstitucion,
       esta_institucionacargo,
-      esta_manualautomatica
+      esta_imagen
     } = estacion;
 
     const result = await client.query(
-      'INSERT INTO estacion (comu_id, tipoesta_id, esta_nombre, esta_ubicacion, esta_latitud, esta_longitud, esta_alturaterreno, esta_propietarioterreno, esta_propietarioinstitucion, esta_institucionacargo, esta_manualautomatica) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING *',
+      'INSERT INTO estacion (comu_id, tipoesta_id, esta_nombre, esta_ubicacion, esta_latitud, esta_longitud, esta_alturaterreno, esta_propietarioterreno, esta_propietarioinstitucion, esta_institucionacargo, esta_imagen) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING *',
       [
         comu_id,
         tipoesta_id,
@@ -33,7 +33,7 @@ async function addEstacion(estacion) {
         esta_propietarioterreno,
         esta_propietarioinstitucion,
         esta_institucionacargo,
-        esta_manualautomatica
+        esta_imagen
       ]
     );
 
@@ -80,11 +80,11 @@ async function updateEstacionById(id, newEstacionData) {
       esta_propietarioterreno,
       esta_propietarioinstitucion,
       esta_institucionacargo,
-      esta_manualautomatica
+      esta_imagen
     } = newEstacionData;
 
     const result = await client.query(
-      'UPDATE estacion SET comu_id = $1, tipoesta_id = $2, esta_nombre = $3, esta_ubicacion = $4, esta_latitud = $5, esta_longitud = $6, esta_alturaterreno = $7, esta_propietarioterreno = $8, esta_propietarioinstitucion = $9, esta_institucionacargo = $10, esta_manualautomatica = $11 WHERE esta_id = $12 RETURNING *',
+      'UPDATE estacion SET comu_id = $1, tipoesta_id = $2, esta_nombre = $3, esta_ubicacion = $4, esta_latitud = $5, esta_longitud = $6, esta_alturaterreno = $7, esta_propietarioterreno = $8, esta_propietarioinstitucion = $9, esta_institucionacargo = $10, esta_imagen = $11 WHERE esta_id = $12 RETURNING *',
       [
         comu_id,
         tipoesta_id,
@@ -96,7 +96,7 @@ async function updateEstacionById(id, newEstacionData) {
         esta_propietarioterreno,
         esta_propietarioinstitucion,
         esta_institucionacargo,
-        esta_manualautomatica,
+        esta_imagen,
         id
       ]
     );
