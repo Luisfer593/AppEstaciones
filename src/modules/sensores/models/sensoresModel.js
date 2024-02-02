@@ -3,6 +3,7 @@
 const pool = require('../../../db/db');
 
 // Agregar un nuevo sensor
+//modificado este metodo
 async function addSensor(sensor) {
   const client = await pool.connect();
   try {
