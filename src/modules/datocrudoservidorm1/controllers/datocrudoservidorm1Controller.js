@@ -1,56 +1,48 @@
-// src/modules/datocrudoservidorm1/controllers/datocrudoservidorm1Controller.js
+const fs = require('fs');
+const csv = require('csv-parser');
 const datocrudoservidorm1Model = require('../models/datocrudoservidorm1Model');
 
-async function addDatoCrudoServidorM1(req, res) {
-  try {
-    const datoCrudoServidorM1 = req.body;
-    const newDatoCrudoServidorM1 = await datocrudoservidorm1Model.addDatoCrudoServidorM1(datoCrudoServidorM1);
-    res.json(newDatoCrudoServidorM1);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Error al agregar dato crudo del servidor M1.' });
-  }
-}
+async function cargarDatosCSV(archivoCSV) {
+  const datos = [];
 
-async function getAllDatosCrudosServidorM1(req, res) {
-  try {
-    const datosCrudosServidorM1 = await datocrudoservidorm1Model.getAllDatosCrudosServidorM1();
-    res.json(datosCrudosServidorM1);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Error al obtener datos crudos del servidor M1.' });
-  }
+  return new Promise((resolve, reject) => {
+    archivoCSV
+      .pipe(csv())
+      .on('data', (row) => {
+        datos.push(row);
+      })
+      .on('end', () => {
+        resolve(datos);
+      })
+      .on('error', (error) => {
+        reject(error);
+      });
+  });
 }
-
-async function deleteDatoCrudoServidorM1(req, res) {
-    try {
-      const { datocrudservm1_id } = req.params;
-      const deletedDatoCrudoServidorM1 = await datocrudoservidorm1Model.deleteDatoCrudoServidorM1(datocrudservm1_id);
-      res.json(deletedDatoCrudoServidorM1);
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'Error al eliminar dato crudo del servidor M1.' });
-    }
-  }
 
 async function cargarDatosDesdeCSV(req, res) {
   try {
-    const filePath = req.body.filePath; // Obtiene la ruta del archivo desde el cuerpo de la solicitud
+    const archivoCSV = req.body && req.body.archivoCSV;
 
-    // Resto del código para leer el archivo y procesar los datos
-    // ...
+    if (!archivoCSV) {
+      return res.status(400).json({ error: 'No se proporcionó un archivo CSV.' });
+    }
 
-    res.json({ message: 'Datos cargados correctamente desde el archivo CSV.' });
+    const datos = await cargarDatosCSV(archivoCSV);
+
+    // Procesa y guarda los datos en la base de datos
+    for (const dato of datos) {
+      await datocrudoservidorm1Model.addDatoCrudoServidorM1(dato);
+    }
+
+    res.status(200).json({ message: 'Datos del CSV procesados y guardados correctamente.' });
   } catch (error) {
-    console.error('Error al cargar datos desde el archivo CSV:', error);
+    console.error(error);
     res.status(500).json({ error: 'Error al cargar datos desde el archivo CSV.' });
   }
 }
 
-  
-  module.exports = {
-    addDatoCrudoServidorM1,
-    getAllDatosCrudosServidorM1,
-    deleteDatoCrudoServidorM1,
-    cargarDatosDesdeCSV,
-  };
+module.exports = {
+  cargarDatosDesdeCSV,
+};
+
