@@ -7,7 +7,7 @@ async function addSensor(sensor) {
   const client = await pool.connect();
   try {
     const { esta_id, marc_id, sens_nombre, sens_modelo, sens_numeroserie, sens_estado, sens_imagen } = sensor;
-    const result = await client.query('INSERT INTO sensores (esta_id, marc_id, sens_, nombre, sens_modelo, sens_numeroserie, sens_estado, sens_imagen) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
+    const result = await client.query('INSERT INTO sensores (esta_id, marc_id, sens_nombre, sens_modelo, sens_numeroserie, sens_estado, sens_imagen) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
       [esta_id, marc_id, sens_nombre, sens_modelo, sens_numeroserie, sens_estado, sens_imagen]);
     return result.rows[0];
   } finally {

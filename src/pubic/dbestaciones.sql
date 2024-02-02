@@ -16,6 +16,7 @@ CREATE DATABASE dbestaciones
 -- Elimina la tablas relacionadas "sensores"
 --DROP TABLE IF EXISTS sensor CASCADE;
 
+
 --tabla provincia
 CREATE TABLE provincia (
     prov_id SERIAL PRIMARY KEY,
@@ -81,8 +82,8 @@ CREATE TABLE marca (
 --tabla sensores
 CREATE TABLE sensores (
     sens_id SERIAL PRIMARY KEY,
-    esta_id integer NOT NULL,
-    marc_id integer NOT NULL,
+    esta_id INTEGER REFERENCES estacion(esta_id) NOT NULL,
+    marc_id INTEGER REFERENCES marca(marc_id) NOT NULL,
     sens_nombre character varying(100) NOT NULL,
     sens_modelo character varying(100),
     sens_numeroserie character varying(100),
