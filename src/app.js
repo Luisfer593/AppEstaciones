@@ -22,7 +22,6 @@ const unidadmedidaRoutes = require('./modules/unidadmedida/routes/unidadmedidaRo
 const variabledatalogerRoutes = require('./modules/variabledataloger/routes/variabledatalogerRoutes');
 const variableservidorRoutes = require('./modules/variableservidor/routes/variableservidorRoutes');
 const sens_variservRoutes = require('./modules/sens_variserv/routes/sens_variservRoutes');
-const datocrudoservidorm1Routes = require('./modules/datocrudoservidorm1/routes/datocrudoservidorm1Routes');
 const abreviaturasRoutes = require('./modules/abreviaturas/routes/abreviaturasRoutes');
 const abreviaturasdatalogerRoutes = require('./modules/abreviaturasdataloger/routes/abreviaturasdatalogerRoutes');
 const app = express();
@@ -53,7 +52,6 @@ app.use('/api', unidadmedidaRoutes);
 app.use('/api', variabledatalogerRoutes);
 app.use('/api', variableservidorRoutes);
 app.use('/api', sens_variservRoutes);
-app.use('/api', datocrudoservidorm1Routes);
 app.use('/api', abreviaturasRoutes);
 app.use('/api', abreviaturasdatalogerRoutes);
 
