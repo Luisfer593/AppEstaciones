@@ -2,74 +2,55 @@
 
 const pool = require('../../../db/db');
 
-// Agregar un nuevo sensor
-//modificado este metodo
-async function addSensor(sensor) {
+async function addSensor(sens_id, esta_id, marc_id, sens_nombre, sens_modelo, sens_numeroserie, sens_estado, sens_especificacion) {
   const client = await pool.connect();
   try {
-    const { esta_id, marc_id, sens_nombre, sens_modelo, sens_numeroserie, sens_estado, sens_imagen } = sensor;
-    const result = await client.query('INSERT INTO sensores (esta_id, marc_id, sens_nombre, sens_modelo, sens_numeroserie, sens_estado, sens_imagen) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
-      [esta_id, marc_id, sens_nombre, sens_modelo, sens_numeroserie, sens_estado, sens_imagen]);
+    const result = await client.query(
+      'INSERT INTO administracion.sensores (sens_id, esta_id, marc_id, sens_nombre, sens_modelo, sens_numeroserie, sens_estado, sens_especificacion) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *',
+      [sens_id, esta_id, marc_id, sens_nombre, sens_modelo, sens_numeroserie, sens_estado, sens_especificacion]
+    );
     return result.rows[0];
   } finally {
     client.release();
   }
 }
 
-// Obtener todos los sensores
 async function getAllSensores() {
   const client = await pool.connect();
   try {
-    const result = await client.query('SELECT * FROM sensores');
+    const result = await client.query('SELECT * FROM administracion.sensores');
     return result.rows;
   } finally {
     client.release();
   }
 }
 
-// Obtener un sensor por su ID
-async function getSensorById(id) {
+async function editSensor(sens_id, esta_id, marc_id, sens_nombre, sens_modelo, sens_numeroserie, sens_estado, sens_especificacion) {
   const client = await pool.connect();
   try {
-    const result = await client.query('SELECT * FROM sensores WHERE sens_id = $1', [id]);
+    const result = await client.query(
+      'UPDATE administracion.sensores SET esta_id = $2, marc_id = $3, sens_nombre = $4, sens_modelo = $5, sens_numeroserie = $6, sens_estado = $7, sens_especificacion = $8 WHERE sens_id = $1 RETURNING *',
+      [sens_id, esta_id, marc_id, sens_nombre, sens_modelo, sens_numeroserie, sens_estado, sens_especificacion]
+    );
     return result.rows[0];
   } finally {
     client.release();
   }
 }
 
-// Actualizar un sensor por su ID
-async function updateSensorById(id, newSensorData) {
+async function deleteSensor(sens_id) {
   const client = await pool.connect();
   try {
-    const { esta_id, marc_id, sens_nombre, sens_modelo, sens_numeroserie, sens_estado, sens_imagen } = newSensorData;
-    const result = await client.query('UPDATE sensores SET esta_id = $1, marc_id = $2, sens_nombre = $3, sens_modelo = $4, sens_numeroserie = $5, sens_estado = $6 , sens_imagen = $7, WHERE sens_id = $8 RETURNING *',
-      [esta_id, marc_id, sens_nombre, sens_modelo, sens_numeroserie, sens_estado, sens_imagen, id]);
+    const result = await client.query('DELETE FROM administracion.sensores WHERE sens_id = $1 RETURNING *', [sens_id]);
     return result.rows[0];
   } finally {
     client.release();
   }
 }
 
-// Eliminar un sensor por su ID
-async function deleteSensorById(id) {
-  const client = await pool.connect();
-  try {
-    const result = await client.query('DELETE FROM sensores WHERE sens_id = $1 RETURNING *', [id]);
-    return result.rows[0];
-  } finally {
-    client.release();
-  }
-}
-
-// Otras funciones CRUD...
-
-// Exportar las funciones
 module.exports = {
   addSensor,
   getAllSensores,
-  getSensorById,
-  updateSensorById,
-  deleteSensorById,
-  // Otras funciones CRUD...
+  editSensor,
+  deleteSensor,
 };

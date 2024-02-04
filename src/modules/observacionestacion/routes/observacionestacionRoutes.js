@@ -1,16 +1,13 @@
 // /src/modules/observacionestacion/routes/observacionestacionRoutes.js
 
 const express = require('express');
-const observacionestacionController = require('../controllers/observacionestacionController');
+const ObservacionEstacionController = require('../controllers/observacionestacionController');
 
 const router = express.Router();
 
-router.post('/observacionesestacion', observacionestacionController.addObservacionEstacion);
-router.get('/observacionesestacion', observacionestacionController.getAllObservacionesEstacion);
-router.get('/observacionesestacion/:id', observacionestacionController.getObservacionEstacionById);
-router.put('/observacionesestacion/:id', observacionestacionController.updateObservacionEstacionById);
-router.delete('/observacionesestacion/:id', observacionestacionController.deleteObservacionEstacionById);
-
-// Otras rutas CRUD...
+router.post('/observacionestacion', ObservacionEstacionController.addObservacionEstacion);
+router.get('/observacionestacion', ObservacionEstacionController.getAllObservacionesEstacion);
+router.put('/observacionestacion', ObservacionEstacionController.updateObservacionEstacion);
+router.delete('/observacionestacion', ObservacionEstacionController.deleteObservacionEstacion);
 
 module.exports = router;

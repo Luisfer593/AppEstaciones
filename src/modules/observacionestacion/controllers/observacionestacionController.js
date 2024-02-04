@@ -1,86 +1,53 @@
 // /src/modules/observacionestacion/controllers/observacionestacionController.js
 
-const observacionestacionModel = require('../models/observacionestacionModel');
+const ObservacionEstacionModel = require('../models/observacionestacionModel');
 
-// Agregar una nueva observación de estación
 async function addObservacionEstacion(req, res) {
   try {
-    const observacion = await observacionestacionModel.addObservacionEstacion(req.body);
-    res.status(201).json(observacion);
+    const { obseesta_id, esta_id, obseesta_descripcion, obseesta_fecha } = req.body;
+    const result = await ObservacionEstacionModel.addObservacionEstacion(obseesta_id, esta_id, obseesta_descripcion, obseesta_fecha);
+    res.status(201).json(result);
   } catch (error) {
     console.error(error);
-    res.status(500).send('Error interno del servidor');
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 }
 
-// Obtener todas las observaciones de estación
 async function getAllObservacionesEstacion(req, res) {
   try {
-    const observaciones = await observacionestacionModel.getAllObservacionesEstacion();
-    res.json(observaciones);
+    const result = await ObservacionEstacionModel.getAllObservacionesEstacion();
+    res.status(200).json(result);
   } catch (error) {
     console.error(error);
-    res.status(500).send('Error interno del servidor');
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 }
 
-// Obtener una observación de estación por su ID
-async function getObservacionEstacionById(req, res) {
-  const { id } = req.params;
+async function updateObservacionEstacion(req, res) {
   try {
-    const observacion = await observacionestacionModel.getObservacionEstacionById(id);
-    if (observacion) {
-      res.json(observacion);
-    } else {
-      res.status(404).send('Observación de estación no encontrada');
-    }
+    const { obseesta_id, newDescripcion, newFecha } = req.body;
+    const result = await ObservacionEstacionModel.updateObservacionEstacion(obseesta_id, newDescripcion, newFecha);
+    res.status(200).json(result);
   } catch (error) {
     console.error(error);
-    res.status(500).send('Error interno del servidor');
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 }
 
-// Actualizar una observación de estación por su ID
-async function updateObservacionEstacionById(req, res) {
-  const { id } = req.params;
+async function deleteObservacionEstacion(req, res) {
   try {
-    const observacionData = req.body;
-    const updatedObservacion = await observacionestacionModel.updateObservacionEstacionById(id, observacionData);
-    if (updatedObservacion) {
-      res.json(updatedObservacion);
-    } else {
-      res.status(404).send('Observación de estación no encontrada');
-    }
+    const { obseesta_id } = req.body;
+    const result = await ObservacionEstacionModel.deleteObservacionEstacion(obseesta_id);
+    res.status(200).json(result);
   } catch (error) {
     console.error(error);
-    res.status(500).send('Error interno del servidor');
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 }
 
-// Eliminar una observación de estación por su ID
-async function deleteObservacionEstacionById(req, res) {
-  const { id } = req.params;
-  try {
-    const deletedObservacion = await observacionestacionModel.deleteObservacionEstacionById(id);
-    if (deletedObservacion) {
-      res.json(deletedObservacion);
-    } else {
-      res.status(404).send('Observación de estación no encontrada');
-    }
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('Error interno del servidor');
-  }
-}
-
-// Otras funciones CRUD...
-
-// Exportar las funciones
 module.exports = {
   addObservacionEstacion,
   getAllObservacionesEstacion,
-  getObservacionEstacionById,
-  updateObservacionEstacionById,
-  deleteObservacionEstacionById
-  // Otras funciones CRUD...
+  updateObservacionEstacion,
+  deleteObservacionEstacion,
 };

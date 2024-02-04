@@ -1,15 +1,12 @@
 // /src/modules/sens_variserv/routes/sens_variservRoutes.js
 
 const express = require('express');
-const sens_variservController = require('../controllers/sens_variservController');
+const SensVariservController = require('../controllers/sens_variservController');
 
 const router = express.Router();
 
-router.post('/sens_variserv', sens_variservController.addSensVariserv);
-router.get('/sens_variserv', sens_variservController.getAllSensVariserv);
-router.get('/sens_variserv/:id', sens_variservController.getSensVariservById);
-router.delete('/sens_variserv/:id', sens_variservController.deleteSensVariservById);
-
-// Otras rutas CRUD...
+router.post('/sens_variserv', SensVariservController.addsens_variserv);
+router.get('/sens_variserv', SensVariservController.getAllsens_variserv);  // Agregamos el método GET
+// Otras rutas CRUD (update, delete) si es necesario...
 
 module.exports = router;

@@ -1,80 +1,53 @@
 // /src/modules/observacionsensores/controllers/observacionsensoresController.js
 
-const observacionsensoresModel = require('../models/observacionsensoresModel');
+const ObservacionSensoresModel = require('../models/observacionsensoresModel');
 
-// Agregar una nueva observación de sensor
-async function addObservacionSensor(req, res) {
+async function addObservacionSensores(req, res) {
   try {
-    const observacionSensor = await observacionsensoresModel.addObservacionSensor(req.body);
-    res.json(observacionSensor);
+    const { obsesens_id, sens_id, obsesens_descripcion, obsesens_fecha } = req.body;
+    const result = await ObservacionSensoresModel.addObservacionSensores(obsesens_id, sens_id, obsesens_descripcion, obsesens_fecha);
+    res.status(201).json(result);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 }
 
-// Obtener todas las observaciones de sensores
 async function getAllObservacionesSensores(req, res) {
   try {
-    const observacionesSensores = await observacionsensoresModel.getAllObservacionesSensores();
-    res.json(observacionesSensores);
+    const result = await ObservacionSensoresModel.getAllObservacionesSensores();
+    res.status(200).json(result);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 }
 
-// Obtener una observación de sensor por su ID
-async function getObservacionSensorById(req, res) {
-  const id = req.params.id;
+async function updateObservacionSensores(req, res) {
   try {
-    const observacionSensor = await observacionsensoresModel.getObservacionSensorById(id);
-    if (observacionSensor) {
-      res.json(observacionSensor);
-    } else {
-      res.status(404).json({ message: 'Observación de sensor no encontrada' });
-    }
+    const { obsesens_id, newDescripcion, newFecha } = req.body;
+    const result = await ObservacionSensoresModel.updateObservacionSensores(obsesens_id, newDescripcion, newFecha);
+    res.status(200).json(result);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 }
 
-// Actualizar una observación de sensor por su ID
-async function updateObservacionSensorById(req, res) {
-  const id = req.params.id;
+async function deleteObservacionSensores(req, res) {
   try {
-    const updatedObservacionSensor = await observacionsensoresModel.updateObservacionSensorById(id, req.body);
-    if (updatedObservacionSensor) {
-      res.json(updatedObservacionSensor);
-    } else {
-      res.status(404).json({ message: 'Observación de sensor no encontrada' });
-    }
+    const { obsesens_id } = req.body;
+    const result = await ObservacionSensoresModel.deleteObservacionSensores(obsesens_id);
+    res.status(200).json(result);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 }
 
-// Eliminar una observación de sensor por su ID
-async function deleteObservacionSensorById(req, res) {
-  const id = req.params.id;
-  try {
-    const deletedObservacionSensor = await observacionsensoresModel.deleteObservacionSensorById(id);
-    if (deletedObservacionSensor) {
-      res.json(deletedObservacionSensor);
-    } else {
-      res.status(404).json({ message: 'Observación de sensor no encontrada' });
-    }
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-}
-
-// Otras funciones CRUD...
-
-// Exportar los controladores
 module.exports = {
-  addObservacionSensor,
+  addObservacionSensores,
   getAllObservacionesSensores,
-  getObservacionSensorById,
-  updateObservacionSensorById,
-  deleteObservacionSensorById,
-  // Otras funciones CRUD...
+  updateObservacionSensores,
+  deleteObservacionSensores,
 };

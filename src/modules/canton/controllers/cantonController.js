@@ -1,77 +1,51 @@
-const cantonModel = require('../models/cantonModel');
+const CantonModel = require('../models/cantonModel');
 
-// Agregar un nuevo cantón
-async function addCanton(req, res) {
-  try {
-    const { prov_id, cant_nombre } = req.body;
-    const nuevoCanton = await cantonModel.addCanton({ prov_id, cant_nombre });
-    res.status(201).json(nuevoCanton);
-  } catch (error) {
-    console.error('Error al agregar cantón:', error);
-    res.status(500).send('Error interno del servidor');
-  }
-}
-
-// Obtener todos los cantones
-async function getAllCantones(req, res) {
-  try {
-    const cantones = await cantonModel.getAllCantones();
-    res.json(cantones);
-  } catch (error) {
-    console.error('Error al obtener cantones:', error);
-    res.status(500).send('Error interno del servidor');
-  }
-}
-
-// Obtener un cantón por su ID
-async function getCantonById(req, res) {
-  try {
-    const idCanton = parseInt(req.params.id);
-    const canton = await cantonModel.getCantonById(idCanton);
-    if (canton) {
-      res.json(canton);
-    } else {
-      res.status(404).send('Cantón no encontrado');
+class CantonController {
+  static async addCanton(req, res) {
+    try {
+      const { cant_id, prov_id, cant_nombre } = req.body;
+      const result = await CantonModel.addCanton(cant_id, prov_id, cant_nombre);
+      res.status(201).json(result);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Internal Server Error' });
     }
-  } catch (error) {
-    console.error('Error al obtener cantón por ID:', error);
-    res.status(500).send('Error interno del servidor');
   }
+
+  static async getAllCantones(req, res) {
+    try {
+      const result = await CantonModel.getAllCantones();
+      res.status(200).json(result);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  }
+
+  static async editCanton(req, res) {
+    try {
+      const { cant_id, prov_id, cant_nombre } = req.body;
+      const result = await CantonModel.editCanton(cant_id, prov_id, cant_nombre);
+      res.status(200).json(result);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  }
+
+  static async deleteCanton(req, res) {
+    try {
+      const { cant_id } = req.body;
+      const result = await CantonModel.deleteCanton(cant_id);
+      res.status(200).json(result);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  }
+
+  // Resto de los métodos CRUD...
+
 }
 
-// Actualizar un cantón por su ID
-async function updateCantonById(req, res) {
-  try {
-    const idCanton = parseInt(req.params.id);
-    const newCantonData = req.body;
-    const cantonActualizado = await cantonModel.updateCantonById(idCanton, newCantonData);
-    res.json(cantonActualizado);
-  } catch (error) {
-    console.error('Error al actualizar cantón:', error);
-    res.status(500).send('Error interno del servidor');
-  }
-}
-
-// Eliminar un cantón por su ID
-async function deleteCantonById(req, res) {
-  try {
-    const idCanton = parseInt(req.params.id);
-    const cantonEliminado = await cantonModel.deleteCantonById(idCanton);
-    res.json(cantonEliminado);
-  } catch (error) {
-    console.error('Error al eliminar cantón:', error);
-    res.status(500).send('Error interno del servidor');
-  }
-}
-
-// Otras funciones CRUD...
-
-// Exportar las funciones del controlador
-module.exports = {
-  addCanton,
-  getAllCantones,
-  getCantonById,
-  updateCantonById,
-  deleteCantonById,
-  // Otras funciones CRUD...
-};
+module.exports = CantonController;

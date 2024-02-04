@@ -1,15 +1,12 @@
 const express = require('express');
-const cantonController = require('../controllers/cantonController');
+const CantonController = require('../controllers/cantonController');
 
 const router = express.Router();
 
-// Rutas para los cantones
-router.post('/cantones', cantonController.addCanton);
-router.get('/cantones', cantonController.getAllCantones);
-router.get('/cantones/:id', cantonController.getCantonById);
-router.put('/cantones/:id', cantonController.updateCantonById);
-router.delete('/cantones/:id', cantonController.deleteCantonById);
-
-// Otras rutas CRUD...
+router.post('/canton', CantonController.addCanton);
+router.get('/canton', CantonController.getAllCantones);
+router.put('/canton', CantonController.editCanton);
+router.delete('/canton', CantonController.deleteCanton);
 
 module.exports = router;
+

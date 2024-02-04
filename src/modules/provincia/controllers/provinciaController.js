@@ -1,77 +1,52 @@
-const provinciaModel = require('../models/provinciaModel');
+// provinciaController.js
+const ProvinciaModel = require('../models/provinciaModel');
 
-// Agregar una nueva provincia
 async function addProvincia(req, res) {
   try {
-    const { prov_nombre } = req.body;
-    const nuevaProvincia = await provinciaModel.addProvincia({ prov_nombre });
-    res.status(201).json(nuevaProvincia);
+    const { prov_id, prov_nombre } = req.body;
+    const result = await ProvinciaModel.addProvincia(prov_id, prov_nombre);
+    res.status(201).json(result);
   } catch (error) {
-    console.error('Error al agregar provincia:', error);
-    res.status(500).send('Error interno del servidor');
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 }
 
-// Obtener todas las provincias
 async function getAllProvincias(req, res) {
   try {
-    const provincias = await provinciaModel.getAllProvincias();
-    res.json(provincias);
+    const result = await ProvinciaModel.getAllProvincias();
+    res.status(200).json(result);
   } catch (error) {
-    console.error('Error al obtener provincias:', error);
-    res.status(500).send('Error interno del servidor');
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 }
 
-// Obtener una provincia por su ID
-async function getProvinciaById(req, res) {
+async function updateProvincia(req, res) {
   try {
-    const idProvincia = parseInt(req.params.id);
-    const provincia = await provinciaModel.getProvinciaById(idProvincia);
-    if (provincia) {
-      res.json(provincia);
-    } else {
-      res.status(404).send('Provincia no encontrada');
-    }
+    const { prov_id, newNombre } = req.body;
+    const result = await ProvinciaModel.updateProvincia(prov_id, newNombre);
+    res.status(200).json(result);
   } catch (error) {
-    console.error('Error al obtener provincia por ID:', error);
-    res.status(500).send('Error interno del servidor');
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 }
 
-// Actualizar una provincia por su ID
-async function updateProvinciaById(req, res) {
+async function deleteProvincia(req, res) {
   try {
-    const idProvincia = parseInt(req.params.id);
-    const newProvinciaData = req.body;
-    const provinciaActualizada = await provinciaModel.updateProvinciaById(idProvincia, newProvinciaData);
-    res.json(provinciaActualizada);
+    const { prov_id } = req.body;
+    const result = await ProvinciaModel.deleteProvincia(prov_id);
+    res.status(200).json(result);
   } catch (error) {
-    console.error('Error al actualizar provincia:', error);
-    res.status(500).send('Error interno del servidor');
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 }
 
-// Eliminar una provincia por su ID
-async function deleteProvinciaById(req, res) {
-  try {
-    const idProvincia = parseInt(req.params.id);
-    const provinciaEliminada = await provinciaModel.deleteProvinciaById(idProvincia);
-    res.json(provinciaEliminada);
-  } catch (error) {
-    console.error('Error al eliminar provincia:', error);
-    res.status(500).send('Error interno del servidor');
-  }
-}
-
-// Otras funciones CRUD...
-
-// Exportar las funciones del controlador
 module.exports = {
   addProvincia,
   getAllProvincias,
-  getProvinciaById,
-  updateProvinciaById,
-  deleteProvinciaById,
-  // Otras funciones CRUD...
+  updateProvincia,
+  deleteProvincia,
 };

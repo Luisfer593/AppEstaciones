@@ -1,15 +1,12 @@
+// provinciaRoutes.js
 const express = require('express');
-const provinciaController = require('../controllers/provinciaController');
+const ProvinciaController = require('../controllers/provinciaController');
 
 const router = express.Router();
 
-// Rutas para las provincias
-router.post('/provincias', provinciaController.addProvincia);
-router.get('/provincias', provinciaController.getAllProvincias);
-router.get('/provincias/:id', provinciaController.getProvinciaById);
-router.put('/provincias/:id', provinciaController.updateProvinciaById);
-router.delete('/provincias/:id', provinciaController.deleteProvinciaById);
-
-// Otras rutas CRUD...
+router.post('/provincia', ProvinciaController.addProvincia);
+router.get('/provincia', ProvinciaController.getAllProvincias);
+router.put('/provincia', ProvinciaController.updateProvincia);
+router.delete('/provincia', ProvinciaController.deleteProvincia);
 
 module.exports = router;

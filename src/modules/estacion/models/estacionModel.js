@@ -1,131 +1,127 @@
 // /src/modules/estacion/models/estacionModel.js
-
 const pool = require('../../../db/db');
 
-// Agregar una nueva estación
-async function addEstacion(estacion) {
+async function addEstacion(
+  esta_id,
+  tipoesta_id,
+  parr_id,
+  esta_nombre,
+  esta_ubicacion,
+  esta_latitud,
+  esta_longitud,
+  esta_alturaterreno,
+  esta_promotorterreno,
+  esta_propietarioinstitucion,
+  esta_institucionacargo,
+  esta_manualautomatica,
+  esta_codigoinamhi,
+  esta_path,
+  esta_comunidad,
+  esta_nombrearchivo,
+  esta_path_leidos
+) {
   const client = await pool.connect();
   try {
-    const {
-      comu_id,
-      tipoesta_id,
-      esta_nombre,
-      esta_ubicacion,
-      esta_latitud,
-      esta_longitud,
-      esta_alturaterreno,
-      esta_propietarioterreno,
-      esta_propietarioinstitucion,
-      esta_institucionacargo,
-      esta_imagen
-    } = estacion;
-
     const result = await client.query(
-      'INSERT INTO estacion (comu_id, tipoesta_id, esta_nombre, esta_ubicacion, esta_latitud, esta_longitud, esta_alturaterreno, esta_propietarioterreno, esta_propietarioinstitucion, esta_institucionacargo, esta_imagen) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING *',
+      'INSERT INTO administracion.estacion (esta_id, tipoesta_id, parr_id, esta_nombre, esta_ubicacion, esta_latitud, esta_longitud, esta_alturaterreno, esta_promotorterreno, esta_propietarioinstitucion, esta_institucionacargo, esta_manualautomatica, esta_codigoinamhi, esta_path, esta_comunidad, esta_nombrearchivo, esta_path_leidos) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18) RETURNING *',
       [
-        comu_id,
+        esta_id,
         tipoesta_id,
+        parr_id,
         esta_nombre,
         esta_ubicacion,
         esta_latitud,
         esta_longitud,
         esta_alturaterreno,
-        esta_propietarioterreno,
+        esta_promotorterreno,
         esta_propietarioinstitucion,
         esta_institucionacargo,
-        esta_imagen
+        esta_manualautomatica,
+        esta_codigoinamhi,
+        esta_path,
+        esta_comunidad,
+        esta_nombrearchivo,
+        esta_path_leidos,
       ]
     );
-
     return result.rows[0];
   } finally {
     client.release();
   }
 }
 
-// Obtener todas las estaciones
 async function getAllEstaciones() {
   const client = await pool.connect();
   try {
-    const result = await client.query('SELECT * FROM estacion');
+    const result = await client.query('SELECT * FROM administracion.estacion');
     return result.rows;
   } finally {
     client.release();
   }
 }
 
-// Obtener una estación por su ID
-async function getEstacionById(id) {
+async function editEstacion(
+  esta_id,
+  tipoesta_id,
+  parr_id,
+  esta_nombre,
+  esta_ubicacion,
+  esta_latitud,
+  esta_longitud,
+  esta_alturaterreno,
+  esta_promotorterreno,
+  esta_propietarioinstitucion,
+  esta_institucionacargo,
+  esta_manualautomatica,
+  esta_codigoinamhi,
+  esta_path,
+  esta_comunidad,
+  esta_nombrearchivo,
+  esta_path_leidos
+) {
   const client = await pool.connect();
   try {
-    const result = await client.query('SELECT * FROM estacion WHERE esta_id = $1', [id]);
-    return result.rows[0];
-  } finally {
-    client.release();
-  }
-}
-
-// Actualizar una estación por su ID
-async function updateEstacionById(id, newEstacionData) {
-  const client = await pool.connect();
-  try {
-    const {
-      comu_id,
-      tipoesta_id,
-      esta_nombre,
-      esta_ubicacion,
-      esta_latitud,
-      esta_longitud,
-      esta_alturaterreno,
-      esta_propietarioterreno,
-      esta_propietarioinstitucion,
-      esta_institucionacargo,
-      esta_imagen
-    } = newEstacionData;
-
     const result = await client.query(
-      'UPDATE estacion SET comu_id = $1, tipoesta_id = $2, esta_nombre = $3, esta_ubicacion = $4, esta_latitud = $5, esta_longitud = $6, esta_alturaterreno = $7, esta_propietarioterreno = $8, esta_propietarioinstitucion = $9, esta_institucionacargo = $10, esta_imagen = $11 WHERE esta_id = $12 RETURNING *',
+      'UPDATE administracion.estacion SET tipoesta_id = $2, parr_id = $3, esta_nombre = $4, esta_ubicacion = $5, esta_latitud = $6, esta_longitud = $7, esta_alturaterreno = $8, esta_promotorterreno = $9, esta_propietarioinstitucion = $10, esta_institucionacargo = $11, esta_manualautomatica = $12, esta_codigoinamhi = $13, esta_path = $14, esta_comunidad = $15, esta_nombrearchivo = $16, esta_path_leidos = $17 WHERE esta_id = $1 RETURNING *',
       [
-        comu_id,
+        esta_id,
         tipoesta_id,
+        parr_id,
         esta_nombre,
         esta_ubicacion,
         esta_latitud,
         esta_longitud,
         esta_alturaterreno,
-        esta_propietarioterreno,
+        esta_promotorterreno,
         esta_propietarioinstitucion,
         esta_institucionacargo,
-        esta_imagen,
-        id
+        esta_manualautomatica,
+        esta_codigoinamhi,
+        esta_path,
+        esta_comunidad,
+        esta_nombrearchivo,
+        esta_path_leidos,
       ]
     );
-
     return result.rows[0];
   } finally {
     client.release();
   }
 }
 
-// Eliminar una estación por su ID
-async function deleteEstacionById(id) {
+async function deleteEstacion(esta_id) {
   const client = await pool.connect();
   try {
-    const result = await client.query('DELETE FROM estacion WHERE esta_id = $1 RETURNING *', [id]);
+    const result = await client.query('DELETE FROM administracion.estacion WHERE esta_id = $1 RETURNING *', [esta_id]);
     return result.rows[0];
   } finally {
     client.release();
   }
 }
 
-// Otras funciones CRUD...
-
-// Exportar las funciones
 module.exports = {
   addEstacion,
   getAllEstaciones,
-  getEstacionById,
-  updateEstacionById,
-  deleteEstacionById
-  // Otras funciones CRUD...
+  editEstacion,
+  deleteEstacion,
 };

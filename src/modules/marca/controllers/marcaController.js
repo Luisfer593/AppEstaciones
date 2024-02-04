@@ -1,86 +1,56 @@
 // /src/modules/marca/controllers/marcaController.js
 
-const marcaModel = require('../models/marcaModel');
+// marcaController.js
+const MarcaModel = require('../models/marcaModel');
 
-// Agregar una nueva marca
 async function addMarca(req, res) {
   try {
-    const marca = await marcaModel.addMarca(req.body);
-    res.status(201).json(marca);
+    const { marc_id, marc_nombre } = req.body;
+    const result = await MarcaModel.addMarca(marc_id, marc_nombre);
+    res.status(201).json(result);
   } catch (error) {
     console.error(error);
-    res.status(500).send('Error interno del servidor');
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 }
 
-// Obtener todas las marcas
 async function getAllMarcas(req, res) {
   try {
-    const marcas = await marcaModel.getAllMarcas();
-    res.json(marcas);
+    const result = await MarcaModel.getAllMarcas();
+    res.status(200).json(result);
   } catch (error) {
     console.error(error);
-    res.status(500).send('Error interno del servidor');
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 }
 
-// Obtener una marca por su ID
-async function getMarcaById(req, res) {
-  const { id } = req.params;
+async function updateMarca(req, res) {
   try {
-    const marca = await marcaModel.getMarcaById(id);
-    if (marca) {
-      res.json(marca);
-    } else {
-      res.status(404).send('Marca no encontrada');
-    }
+    const { marc_id, newNombre } = req.body;
+    const result = await MarcaModel.updateMarca(marc_id, newNombre);
+    res.status(200).json(result);
   } catch (error) {
     console.error(error);
-    res.status(500).send('Error interno del servidor');
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 }
 
-// Actualizar una marca por su ID
-async function updateMarcaById(req, res) {
-  const { id } = req.params;
+async function deleteMarca(req, res) {
   try {
-    const marcaData = req.body;
-    const updatedMarca = await marcaModel.updateMarcaById(id, marcaData);
-    if (updatedMarca) {
-      res.json(updatedMarca);
-    } else {
-      res.status(404).send('Marca no encontrada');
-    }
+    const { marc_id } = req.body;
+    const result = await MarcaModel.deleteMarca(marc_id);
+    res.status(200).json(result);
   } catch (error) {
     console.error(error);
-    res.status(500).send('Error interno del servidor');
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 }
-
-// Eliminar una marca por su ID
-async function deleteMarcaById(req, res) {
-  const { id } = req.params;
-  try {
-    const deletedMarca = await marcaModel.deleteMarcaById(id);
-    if (deletedMarca) {
-      res.json(deletedMarca);
-    } else {
-      res.status(404).send('Marca no encontrada');
-    }
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('Error interno del servidor');
-  }
-}
-
-// Otras funciones CRUD...
 
 // Exportar las funciones
 module.exports = {
   addMarca,
   getAllMarcas,
-  getMarcaById,
-  updateMarcaById,
-  deleteMarcaById
+  updateMarca,
+  deleteMarca,
   // Otras funciones CRUD...
 };

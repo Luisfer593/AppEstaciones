@@ -1,88 +1,78 @@
 // /src/modules/tipoestacion/controllers/tipoestacionController.js
 
-const tipoEstacionModel = require('../models/tipoestacionModel');
+const TipoestacionModel = require('../models/tipoestacionModel');
 
-// Controlador para agregar un nuevo tipo de estación
-async function addTipoEstacion(req, res) {
+async function addTipoestacion(req, res) {
   try {
-    const { tipoesta_nombre } = req.body;
-
-    // Validar que se proporcionó el nombre del tipo de estación
-    if (!tipoesta_nombre) {
-      return res.status(400).json({ error: 'El nombre del tipo de estación es obligatorio' });
-    }
-
-    // Llamar a la función del modelo para agregar un nuevo tipo de estación
-    const nuevoTipoEstacion = await tipoEstacionModel.addTipoEstacion({ tipoesta_nombre });
-
-    // Devolver el resultado como respuesta
-    res.status(201).json(nuevoTipoEstacion);
+    const { tipoesta_id, tiposesta_nombre } = req.body;
+    const result = await TipoestacionModel.addTipoestacion(tipoesta_id, tiposesta_nombre);
+    res.status(201).json(result);
   } catch (error) {
-    console.error('Error al agregar tipo de estación:', error);
-    res.status(500).send('Error interno del servidor');
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 }
 
-// Controlador para obtener todos los tipos de estación
-async function getAllTipoEstaciones(req, res) {
+async function getAllTipoestacion(req, res) {
   try {
-    const tiposEstacion = await tipoEstacionModel.getAllTipoEstaciones();
-    res.json(tiposEstacion);
+    const result = await TipoestacionModel.getAllTipoestacion();
+    res.status(200).json(result);
   } catch (error) {
-    console.error('Error al obtener tipos de estación:', error);
-    res.status(500).send('Error interno del servidor');
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 }
 
-// Controlador para obtener un tipo de estación por su ID
-async function getTipoEstacionById(req, res) {
+async function getTipoestacionById(req, res) {
   try {
-    const idTipoEstacion = parseInt(req.params.id);
-    const tipoEstacion = await tipoEstacionModel.getTipoEstacionById(idTipoEstacion);
-    if (tipoEstacion) {
-      res.json(tipoEstacion);
+    const { tipoesta_id } = req.params;
+    const result = await TipoestacionModel.getTipoestacionById(tipoesta_id);
+    if (result) {
+      res.status(200).json(result);
     } else {
-      res.status(404).send('Tipo de estación no encontrado');
+      res.status(404).json({ error: 'Tipoestacion not found' });
     }
   } catch (error) {
-    console.error('Error al obtener tipo de estación por ID:', error);
-    res.status(500).send('Error interno del servidor');
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 }
 
-// Controlador para actualizar un tipo de estación por su ID
-async function updateTipoEstacion(req, res) {
+async function updateTipoestacionById(req, res) {
   try {
-    const idTipoEstacion = parseInt(req.params.id);
-    const newTipoEstacionData = req.body;
-    const tipoEstacionActualizado = await tipoEstacionModel.updateTipoEstacionById(idTipoEstacion, newTipoEstacionData);
-    res.json(tipoEstacionActualizado);
+    const { tipoesta_id } = req.params;
+    const { tiposesta_nombre } = req.body;
+    const result = await TipoestacionModel.updateTipoestacionById(tipoesta_id, tiposesta_nombre);
+    if (result) {
+      res.status(200).json(result);
+    } else {
+      res.status(404).json({ error: 'Tipoestacion not found' });
+    }
   } catch (error) {
-    console.error('Error al actualizar tipo de estación:', error);
-    res.status(500).send('Error interno del servidor');
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 }
 
-// Controlador para eliminar un tipo de estación por su ID
-async function deleteTipoEstacion(req, res) {
+async function deleteTipoestacionById(req, res) {
   try {
-    const idTipoEstacion = parseInt(req.params.id);
-    const tipoEstacionEliminado = await tipoEstacionModel.deleteTipoEstacionById(idTipoEstacion);
-    res.json(tipoEstacionEliminado);
+    const { tipoesta_id } = req.params;
+    const result = await TipoestacionModel.deleteTipoestacionById(tipoesta_id);
+    if (result) {
+      res.status(200).json({ message: 'Tipoestacion deleted successfully' });
+    } else {
+      res.status(404).json({ error: 'Tipoestacion not found' });
+    }
   } catch (error) {
-    console.error('Error al eliminar tipo de estación:', error);
-    res.status(500).send('Error interno del servidor');
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 }
 
-// Otras funciones CRUD...
-
-// Exportar las funciones del controlador
 module.exports = {
-  addTipoEstacion,
-  getAllTipoEstaciones,
-  getTipoEstacionById,
-  updateTipoEstacion,
-  deleteTipoEstacion,
-  // Otras funciones CRUD...
+  addTipoestacion,
+  getAllTipoestacion,
+  getTipoestacionById,
+  updateTipoestacionById,
+  deleteTipoestacionById,
 };

@@ -1,86 +1,124 @@
 // /src/modules/estacion/controllers/estacionController.js
+const EstacionModel = require('../models/estacionModel');
 
-const estacionModel = require('../models/estacionModel');
-
-// Agregar una nueva estación
-async function addEstacion(req, res) {
-  try {
-    const estacion = await estacionModel.addEstacion(req.body);
-    res.status(201).json(estacion);
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('Error interno del servidor');
-  }
-}
-
-// Obtener todas las estaciones
-async function getAllEstaciones(req, res) {
-  try {
-    const estaciones = await estacionModel.getAllEstaciones();
-    res.json(estaciones);
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('Error interno del servidor');
-  }
-}
-
-// Obtener una estación por su ID
-async function getEstacionById(req, res) {
-  const { id } = req.params;
-  try {
-    const estacion = await estacionModel.getEstacionById(id);
-    if (estacion) {
-      res.json(estacion);
-    } else {
-      res.status(404).send('Estación no encontrada');
+class EstacionController {
+  static async addEstacion(req, res) {
+    try {
+      const {
+        esta_id,
+        tipoesta_id,
+        parr_id,
+        esta_nombre,
+        esta_ubicacion,
+        esta_latitud,
+        esta_longitud,
+        esta_alturaterreno,
+        esta_promotorterreno,
+        esta_propietarioinstitucion,
+        esta_institucionacargo,
+        esta_manualautomatica,
+        esta_codigoinamhi,
+        esta_path,
+        esta_comunidad,
+        esta_nombrearchivo,
+        esta_path_leidos,
+      } = req.body;
+      const result = await EstacionModel.addEstacion(
+        esta_id,
+        tipoesta_id,
+        parr_id,
+        esta_nombre,
+        esta_ubicacion,
+        esta_latitud,
+        esta_longitud,
+        esta_alturaterreno,
+        esta_promotorterreno,
+        esta_propietarioinstitucion,
+        esta_institucionacargo,
+        esta_manualautomatica,
+        esta_codigoinamhi,
+        esta_path,
+        esta_comunidad,
+        esta_nombrearchivo,
+        esta_path_leidos
+      );
+      res.status(201).json(result);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Internal Server Error' });
     }
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('Error interno del servidor');
   }
-}
 
-// Actualizar una estación por su ID
-async function updateEstacionById(req, res) {
-  const { id } = req.params;
-  try {
-    const estacionData = req.body;
-    const updatedEstacion = await estacionModel.updateEstacionById(id, estacionData);
-    if (updatedEstacion) {
-      res.json(updatedEstacion);
-    } else {
-      res.status(404).send('Estación no encontrada');
+  static async getAllEstaciones(req, res) {
+    try {
+      const result = await EstacionModel.getAllEstaciones();
+      res.status(200).json(result);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Internal Server Error' });
     }
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('Error interno del servidor');
   }
-}
 
-// Eliminar una estación por su ID
-async function deleteEstacionById(req, res) {
-  const { id } = req.params;
-  try {
-    const deletedEstacion = await estacionModel.deleteEstacionById(id);
-    if (deletedEstacion) {
-      res.json(deletedEstacion);
-    } else {
-      res.status(404).send('Estación no encontrada');
+  static async editEstacion(req, res) {
+    try {
+      const {
+        esta_id,
+        tipoesta_id,
+        parr_id,
+        esta_nombre,
+        esta_ubicacion,
+        esta_latitud,
+        esta_longitud,
+        esta_alturaterreno,
+        esta_promotorterreno,
+        esta_propietarioinstitucion,
+        esta_institucionacargo,
+        esta_manualautomatica,
+        esta_codigoinamhi,
+        esta_path,
+        esta_comunidad,
+        esta_nombrearchivo,
+        esta_path_leidos,
+      } = req.body;
+      const result = await EstacionModel.editEstacion(
+        esta_id,
+        tipoesta_id,
+        parr_id,
+        esta_nombre,
+        esta_ubicacion,
+        esta_latitud,
+        esta_longitud,
+        esta_alturaterreno,
+        esta_promotorterreno,
+        esta_propietarioinstitucion,
+        esta_institucionacargo,
+        esta_manualautomatica,
+        esta_codigoinamhi,
+        esta_path,
+        esta_comunidad,
+        esta_nombrearchivo,
+        esta_path_leidos
+      );
+      res.status(200).json(result);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Internal Server Error' });
     }
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('Error interno del servidor');
   }
+
+  static async deleteEstacion(req, res) {
+    try {
+      const { esta_id } = req.body;
+      const result = await EstacionModel.deleteEstacion(esta_id);
+      res.status(200).json(result);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  }
+
+  // Resto de los métodos CRUD...
+
 }
 
-// Otras funciones CRUD...
-
-// Exportar las funciones
-module.exports = {
-  addEstacion,
-  getAllEstaciones,
-  getEstacionById,
-  updateEstacionById,
-  deleteEstacionById
-  // Otras funciones CRUD...
-};
+module.exports = EstacionController;

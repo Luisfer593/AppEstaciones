@@ -1,64 +1,32 @@
 // /src/modules/sens_variserv/controllers/sens_variservController.js
 
-const sens_variservModel = require('../models/sens_variservModel');
+const SensVariservModel = require('../models/sens_variservModel');
 
-// Agregar una nueva relación entre sensor y variable de servidor
-async function addSensVariserv(req, res) {
+async function addsens_variserv(req, res) {
   try {
-    const sensVariserv = await sens_variservModel.addSensVariserv(req.body);
-    res.json(sensVariserv);
+    const { variserv_id, sens_id } = req.body;
+    const result = await SensVariservModel.addsens_variserv(variserv_id, sens_id);
+    res.status(201).json(result);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 }
 
-// Obtener todas las relaciones entre sensor y variable de servidor
-async function getAllSensVariserv(req, res) {
+async function getAllsens_variserv(req, res) {
   try {
-    const sensVariservList = await sens_variservModel.getAllSensVariserv();
-    res.json(sensVariservList);
+    const result = await SensVariservModel.getAllsens_variserv();
+    res.status(200).json(result);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 }
 
-// Obtener una relación entre sensor y variable de servidor por su ID
-async function getSensVariservById(req, res) {
-  const id = req.params.id;
-  try {
-    const sensVariserv = await sens_variservModel.getSensVariservById(id);
-    if (sensVariserv) {
-      res.json(sensVariserv);
-    } else {
-      res.status(404).json({ message: 'Relación sensor-variable de servidor no encontrada' });
-    }
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-}
+// Otras funciones CRUD (update, delete) si es necesario...
 
-// Eliminar una relación entre sensor y variable de servidor por su ID
-async function deleteSensVariservById(req, res) {
-  const id = req.params.id;
-  try {
-    const deletedSensVariserv = await sens_variservModel.deleteSensVariservById(id);
-    if (deletedSensVariserv) {
-      res.json(deletedSensVariserv);
-    } else {
-      res.status(404).json({ message: 'Relación sensor-variable de servidor no encontrada' });
-    }
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-}
-
-// Otras funciones CRUD...
-
-// Exportar las funciones
 module.exports = {
-  addSensVariserv,
-  getAllSensVariserv,
-  getSensVariservById,
-  deleteSensVariservById,
+  addsens_variserv,
+  getAllsens_variserv,  // Agregamos el método GET
   // Otras funciones CRUD...
 };

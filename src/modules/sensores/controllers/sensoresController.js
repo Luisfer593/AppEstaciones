@@ -1,80 +1,54 @@
 // /src/modules/sensores/controllers/sensoresController.js
 
-const sensoresModel = require('../models/sensoresModel');
 
-// Agregar un nuevo sensor
-async function addSensor(req, res) {
-  try {
-    const sensor = await sensoresModel.addSensor(req.body);
-    res.json(sensor);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-}
+const SensoresModel = require('../models/sensoresModel');
 
-// Obtener todos los sensores
-async function getAllSensores(req, res) {
-  try {
-    const sensores = await sensoresModel.getAllSensores();
-    res.json(sensores);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-}
-
-// Obtener un sensor por su ID
-async function getSensorById(req, res) {
-  const id = req.params.id;
-  try {
-    const sensor = await sensoresModel.getSensorById(id);
-    if (sensor) {
-      res.json(sensor);
-    } else {
-      res.status(404).json({ message: 'Sensor no encontrado' });
+class SensoresController {
+  static async addSensor(req, res) {
+    try {
+      const { sens_id, esta_id, marc_id, sens_nombre, sens_modelo, sens_numeroserie, sens_estado, sens_especificacion } = req.body;
+      const result = await SensoresModel.addSensor(sens_id, esta_id, marc_id, sens_nombre, sens_modelo, sens_numeroserie, sens_estado, sens_especificacion);
+      res.status(201).json(result);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Internal Server Error' });
     }
-  } catch (error) {
-    res.status(500).json({ error: error.message });
   }
-}
 
-// Actualizar un sensor por su ID
-async function updateSensorById(req, res) {
-  const id = req.params.id;
-  try {
-    const updatedSensor = await sensoresModel.updateSensorById(id, req.body);
-    if (updatedSensor) {
-      res.json(updatedSensor);
-    } else {
-      res.status(404).json({ message: 'Sensor no encontrado' });
+  static async getAllSensores(req, res) {
+    try {
+      const result = await SensoresModel.getAllSensores();
+      res.status(200).json(result);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Internal Server Error' });
     }
-  } catch (error) {
-    res.status(500).json({ error: error.message });
   }
-}
 
-// Eliminar un sensor por su ID
-async function deleteSensorById(req, res) {
-  const id = req.params.id;
-  try {
-    const deletedSensor = await sensoresModel.deleteSensorById(id);
-    if (deletedSensor) {
-      res.json(deletedSensor);
-    } else {
-      res.status(404).json({ message: 'Sensor no encontrado' });
+  static async editSensor(req, res) {
+    try {
+      const { sens_id, esta_id, marc_id, sens_nombre, sens_modelo, sens_numeroserie, sens_estado, sens_especificacion } = req.body;
+      const result = await SensoresModel.editSensor(sens_id, esta_id, marc_id, sens_nombre, sens_modelo, sens_numeroserie, sens_estado, sens_especificacion);
+      res.status(200).json(result);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Internal Server Error' });
     }
-  } catch (error) {
-    res.status(500).json({ error: error.message });
   }
+
+  static async deleteSensor(req, res) {
+    try {
+      const { sens_id } = req.body;
+      const result = await SensoresModel.deleteSensor(sens_id);
+      res.status(200).json(result);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  }
+
+  // Resto de los métodos CRUD...
+
 }
 
-// Otras funciones CRUD...
-
-// Exportar los controladores
-module.exports = {
-  addSensor,
-  getAllSensores,
-  getSensorById,
-  updateSensorById,
-  deleteSensorById,
-  // Otras funciones CRUD...
-};
+module.exports = SensoresController;

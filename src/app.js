@@ -17,13 +17,14 @@ const observacionestacionRoutes = require('./modules/observacionestacion/routes/
 const marcaRoutes = require('./modules/marca/routes/marcaRoutes');
 const sensoresRoutes = require('./modules/sensores/routes/sensoresRoutes');
 const observacionsensoresRoutes = require('./modules/observacionsensores/routes/observacionsensoresRoutes');
-const sensVaridataRoutes = require('./modules/sens_varidata/routes/sensVaridataRoutes');
+const sens_varidataRoutes = require('./modules/sens_varidata/routes/sens_varidataRoutes');
 const unidadmedidaRoutes = require('./modules/unidadmedida/routes/unidadmedidaRoutes');
 const variabledatalogerRoutes = require('./modules/variabledataloger/routes/variabledatalogerRoutes');
 const variableservidorRoutes = require('./modules/variableservidor/routes/variableservidorRoutes');
 const sens_variservRoutes = require('./modules/sens_variserv/routes/sens_variservRoutes');
 const datocrudoservidorm1Routes = require('./modules/datocrudoservidorm1/routes/datocrudoservidorm1Routes');
-
+const abreviaturasRoutes = require('./modules/abreviaturas/routes/abreviaturasRoutes');
+const abreviaturasdatalogerRoutes = require('./modules/abreviaturasdataloger/routes/abreviaturasdatalogerRoutes');
 const app = express();
 const port = 4000;
 
@@ -47,13 +48,14 @@ app.use('/api', observacionestacionRoutes);
 app.use('/api', marcaRoutes);
 app.use('/api', sensoresRoutes);
 app.use('/api', observacionsensoresRoutes);
-app.use('/api', sensVaridataRoutes);
+app.use('/api', sens_varidataRoutes);
 app.use('/api', unidadmedidaRoutes);
 app.use('/api', variabledatalogerRoutes);
 app.use('/api', variableservidorRoutes);
 app.use('/api', sens_variservRoutes);
 app.use('/api', datocrudoservidorm1Routes);
-
+app.use('/api', abreviaturasRoutes);
+app.use('/api', abreviaturasdatalogerRoutes);
 
 app.listen(port, () => {
   console.log(`Servidor corriendo en http://localhost:${port}`);

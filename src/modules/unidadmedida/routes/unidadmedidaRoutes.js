@@ -1,16 +1,14 @@
 // /src/modules/unidadmedida/routes/unidadmedidaRoutes.js
 
 const express = require('express');
-const unidadmedidaController = require('../controllers/unidadmedidaController');
+const UnidadmedidaController = require('../controllers/unidadmedidaController');
 
 const router = express.Router();
 
-router.post('/unidadmedida', unidadmedidaController.addUnidadMedida);
-router.get('/unidadmedida', unidadmedidaController.getAllUnidadesMedida);
-router.get('/unidadmedida/:id', unidadmedidaController.getUnidadMedidaById);
-router.put('/unidadmedida/:id', unidadmedidaController.updateUnidadMedidaById);
-router.delete('/unidadmedida/:id', unidadmedidaController.deleteUnidadMedidaById);
-
-// Otras rutas CRUD...
+router.post('/unidadmedida', UnidadmedidaController.addUnidadmedida);
+router.get('/unidadmedida', UnidadmedidaController.getAllUnidadmedida);
+router.get('/unidadmedida/:unidmedi_id', UnidadmedidaController.getUnidadmedidaById);
+router.put('/unidadmedida/:unidmedi_id', UnidadmedidaController.updateUnidadmedidaById);
+router.delete('/unidadmedida/:unidmedi_id', UnidadmedidaController.deleteUnidadmedidaById);
 
 module.exports = router;
