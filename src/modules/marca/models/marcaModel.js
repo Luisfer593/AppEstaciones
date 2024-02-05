@@ -1,57 +1,55 @@
 // /src/modules/marca/models/marcaModel.js
-
-// marcaModel.js
 const pool = require('../../../db/db');
 
-async function addMarca(marc_id, marc_nombre) {
-  const client = await pool.connect();
+async function insertarMarca(marc_nombre) {
   try {
-    const result = await client.query(
-      'INSERT INTO administracion.marca (marc_id, marc_nombre) VALUES ($1, $2) RETURNING *',
-      [marc_id, marc_nombre]
-    );
-    return result.rows[0];
-  } finally {
-    client.release();
+    const result = await pool.query(`
+      SELECT administracion.fn_insertar_marca($1) as success
+    `, [marc_nombre]);
+    return result.rows[0].success;
+  } catch (error) {
+    console.error(error);
+    return false;
   }
 }
 
-async function getAllMarcas() {
-  const client = await pool.connect();
+async function actualizarMarca(marc_id, marc_nombre) {
   try {
-    const result = await client.query('SELECT * FROM administracion.marca');
+    const result = await pool.query(`
+      UPDATE administracion.marca
+      SET marc_nombre = $2
+      WHERE marc_id = $1
+    `, [marc_id, marc_nombre]);
+    return result.rowCount > 0;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+}
+
+async function eliminarMarca(marc_id) {
+  try {
+    const result = await pool.query('DELETE FROM administracion.marca WHERE marc_id = $1', [marc_id]);
+    return result.rowCount > 0;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+}
+
+async function listarMarcas() {
+  try {
+    const result = await pool.query('SELECT marc_id, marc_nombre FROM administracion.marca');
     return result.rows;
-  } finally {
-    client.release();
-  }
-}
-
-async function updateMarca(marc_id, newNombre) {
-  const client = await pool.connect();
-  try {
-    const result = await client.query(
-      'UPDATE administracion.marca SET marc_nombre = $1 WHERE marc_id = $2 RETURNING *',
-      [newNombre, marc_id]
-    );
-    return result.rows[0];
-  } finally {
-    client.release();
-  }
-}
-
-async function deleteMarca(marc_id) {
-  const client = await pool.connect();
-  try {
-    const result = await client.query('DELETE FROM administracion.marca WHERE marc_id = $1 RETURNING *', [marc_id]);
-    return result.rows[0];
-  } finally {
-    client.release();
+  } catch (error) {
+    console.error(error);
+    return [];
   }
 }
 
 module.exports = {
-  addMarca,
-  getAllMarcas,
-  updateMarca,
-  deleteMarca,
+  insertarMarca,
+  actualizarMarca,
+  eliminarMarca,
+  listarMarcas,
 };

@@ -1,56 +1,52 @@
 // /src/modules/marca/controllers/marcaController.js
-
-// marcaController.js
 const MarcaModel = require('../models/marcaModel');
 
-async function addMarca(req, res) {
+async function insertarMarca(req, res) {
+  try {
+    const { marc_nombre } = req.body;
+    const success = await MarcaModel.insertarMarca(marc_nombre);
+    res.status(200).json({ success });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+}
+
+async function actualizarMarca(req, res) {
   try {
     const { marc_id, marc_nombre } = req.body;
-    const result = await MarcaModel.addMarca(marc_id, marc_nombre);
-    res.status(201).json(result);
+    const success = await MarcaModel.actualizarMarca(marc_id, marc_nombre);
+    res.status(200).json({ success });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 }
 
-async function getAllMarcas(req, res) {
+async function eliminarMarca(req, res) {
   try {
-    const result = await MarcaModel.getAllMarcas();
-    res.status(200).json(result);
+    const { marc_id } = req.params;
+    const success = await MarcaModel.eliminarMarca(marc_id);
+    res.status(200).json({ success });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 }
 
-async function updateMarca(req, res) {
+async function listarMarcas(req, res) {
   try {
-    const { marc_id, newNombre } = req.body;
-    const result = await MarcaModel.updateMarca(marc_id, newNombre);
-    res.status(200).json(result);
+    const marcas = await MarcaModel.listarMarcas();
+    res.status(200).json(marcas);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 }
 
-async function deleteMarca(req, res) {
-  try {
-    const { marc_id } = req.body;
-    const result = await MarcaModel.deleteMarca(marc_id);
-    res.status(200).json(result);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-}
-
-// Exportar las funciones
 module.exports = {
-  addMarca,
-  getAllMarcas,
-  updateMarca,
-  deleteMarca,
-  // Otras funciones CRUD...
+  insertarMarca,
+  actualizarMarca,
+  eliminarMarca,
+  listarMarcas,
 };

@@ -1,67 +1,100 @@
 // /src/modules/variableservidor/models/variableservidorModel.js
-
 const pool = require('../../../db/db');
 
-async function addVariableservidor(unidmedi_id, variserv_nombre) {
-  const client = await pool.connect();
+async function obtenerVariableServidorLista() {
   try {
-    const result = await client.query(
-      'INSERT INTO administracion.variableservidor (unidmedi_id, variserv_nombre) VALUES ($1, $2) RETURNING *',
-      [unidmedi_id, variserv_nombre]
-    );
-    return result.rows[0];
-  } finally {
-    client.release();
-  }
-}
-
-async function getAllVariableservidor() {
-  const client = await pool.connect();
-  try {
-    const result = await client.query('SELECT * FROM administracion.variableservidor');
+    const result = await pool.query('SELECT variserv_id, unidmedi_id, variserv_nombre, variserv_abreviatura FROM administracion.variableservidor');
     return result.rows;
-  } finally {
-    client.release();
+  } catch (error) {
+    console.error(error);
+    return [];
   }
 }
 
-async function getVariableservidorById(variserv_id) {
-  const client = await pool.connect();
+async function obtenerVariableServidorById(id_variserv) {
   try {
-    const result = await client.query('SELECT * FROM administracion.variableservidor WHERE variserv_id = $1', [variserv_id]);
-    return result.rows[0];
-  } finally {
-    client.release();
+    const result = await pool.query('SELECT variserv_id, unidmedi_id, variserv_nombre, variserv_abreviatura FROM administracion.variableservidor WHERE variserv_id = $1', [id_variserv]);
+    return result.rows;
+  } catch (error) {
+    console.error(error);
+    return [];
   }
 }
 
-async function updateVariableservidorById(variserv_id, unidmedi_id, variserv_nombre) {
-  const client = await pool.connect();
+async function obtenerVariableServidorByAbreviatura(strabreviatura) {
   try {
-    const result = await client.query(
-      'UPDATE administracion.variableservidor SET unidmedi_id = $1, variserv_nombre = $2 WHERE variserv_id = $3 RETURNING *',
-      [unidmedi_id, variserv_nombre, variserv_id]
-    );
-    return result.rows[0];
-  } finally {
-    client.release();
+    const result = await pool.query('SELECT * FROM administracion.varibles_by_abrebiatura($1)', [strabreviatura]);
+    return result.rows;
+  } catch (error) {
+    console.error(error);
+    return [];
   }
 }
 
-async function deleteVariableservidorById(variserv_id) {
-  const client = await pool.connect();
+async function obtenerVariableServidorByIdUnidMedi(id_unidmedi) {
   try {
-    const result = await client.query('DELETE FROM administracion.variableservidor WHERE variserv_id = $1 RETURNING *', [variserv_id]);
-    return result.rows[0];
-  } finally {
-    client.release();
+    const result = await pool.query('SELECT variserv_id, unidmedi_id, variserv_nombre, variserv_abreviatura FROM administracion.variableservidor WHERE unidmedi_id = $1', [id_unidmedi]);
+    return result.rows;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+}
+
+async function comprobarAbreviatura(strabreviatura) {
+  try {
+    const result = await pool.query('SELECT * FROM administracion.variableservidor WHERE variserv_abreviatura ILIKE $1 OR variserv_abreviaturados ILIKE $1', [strabreviatura]);
+    return result.rowCount > 0;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+}
+
+async function insertarVariableServidor(variableservidor) {
+  try {
+    const result = await pool.query(`
+      INSERT INTO administracion.variableservidor(unidmedi_id, variserv_nombre, variserv_abreviatura, variserv_abreviaturados)
+      VALUES ($1, $2, $3, $4)
+    `, [variableservidor.unidmedi_id, variableservidor.variserv_nombre, variableservidor.variserv_abreviatura, variableservidor.variserv_abreviaturados]);
+    return result.rowCount > 0;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+}
+
+async function actualizarVariableServidor(variableservidor) {
+  try {
+    const result = await pool.query(`
+      UPDATE administracion.variableservidor
+      SET unidmedi_id = $1, variserv_nombre = $2, variserv_abreviatura = $3, variserv_abreviaturados = $4
+      WHERE variserv_id = $5
+    `, [variableservidor.unidmedi_id, variableservidor.variserv_nombre, variableservidor.variserv_abreviatura, variableservidor.variserv_abreviaturados, variableservidor.variserv_id]);
+    return result.rowCount > 0;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+}
+
+async function eliminarVariableServidor(id_variserv) {
+  try {
+    const result = await pool.query('DELETE FROM administracion.variableservidor WHERE variserv_id = $1', [id_variserv]);
+    return result.rowCount > 0;
+  } catch (error) {
+    console.error(error);
+    return false;
   }
 }
 
 module.exports = {
-  addVariableservidor,
-  getAllVariableservidor,
-  getVariableservidorById,
-  updateVariableservidorById,
-  deleteVariableservidorById,
+  obtenerVariableServidorLista,
+  obtenerVariableServidorById,
+  obtenerVariableServidorByAbreviatura,
+  obtenerVariableServidorByIdUnidMedi,
+  comprobarAbreviatura,
+  insertarVariableServidor,
+  actualizarVariableServidor,
+  eliminarVariableServidor,
 };

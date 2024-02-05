@@ -6,8 +6,10 @@ const AbreviaturasController = require('../controllers/abreviaturasController');
 const router = express.Router();
 
 router.post('/abreviaturas', AbreviaturasController.insertarAbreviatura);
-router.get('/abreviaturas', AbreviaturasController.getAllAbreviaturas);
-router.delete('/abreviaturas/:id', AbreviaturasController.eliminarAbreviatura);
+router.put('/abreviaturas/:abre_id', AbreviaturasController.actualizarAbreviatura);
+router.delete('/abreviaturas/:abre_id', AbreviaturasController.eliminarAbreviatura);
+router.get('/abreviaturas', AbreviaturasController.obtenerAbreviaturas);
 
+// Otras rutas según sea necesario
 
 module.exports = router;

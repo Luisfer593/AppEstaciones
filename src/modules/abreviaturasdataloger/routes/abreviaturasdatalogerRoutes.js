@@ -3,7 +3,11 @@ const AbreviaturasDatalogerController = require('../controllers/abreviaturasdata
 
 const router = express.Router();
 
-router.post('/abreviaturasdataloger', AbreviaturasDatalogerController.addAbreviaturaDataloger);
-router.get('/abreviaturasdataloger', AbreviaturasDatalogerController.getAllAbreviaturasDataloger);
+router.post('/abreviaturasdataloger', AbreviaturasDatalogerController.insertarAbreviatura);
+router.put('/abreviaturasdataloger/:abredata_id', AbreviaturasDatalogerController.actualizarAbreviatura);
+router.delete('/abreviaturasdataloger/:abredata_id', AbreviaturasDatalogerController.eliminarAbreviatura);
+router.get('/abreviaturasdataloger', AbreviaturasDatalogerController.obtenerAbreviaturas);
+
+// Otras rutas según sea necesario
 
 module.exports = router;

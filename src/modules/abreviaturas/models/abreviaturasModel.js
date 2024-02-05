@@ -1,53 +1,49 @@
 // models/abreviaturasModel.js
-
 const pool = require('../../../db/db');
 
 async function insertarAbreviatura(variserv_id, abre_descripcion) {
-  const client = await pool.connect();
   try {
-    let nuevocodigo = 1;
-
-    // Obtener el máximo valor de abre_id
-    const result = await client.query('SELECT MAX(abre_id) FROM administracion.abreviaturas');
-    if (result.rows.length > 0) {
-      nuevocodigo = result.rows[0].max + 1;
-    }
-
-    // Insertar la nueva abreviatura
-    const insertQuery = 'INSERT INTO administracion.abreviaturas(abre_id, variserv_id, abre_descripcion) VALUES ($1, $2, $3) RETURNING *';
-    const resultInsert = await client.query(insertQuery, [nuevocodigo, variserv_id, abre_descripcion]);
-
-    return resultInsert.rows[0];
-  } finally {
-    client.release();
+    const result = await pool.query('SELECT administracion.fn_insertar_abreviaturas($1, $2) as success', [variserv_id, abre_descripcion]);
+    return result.rows[0].success;
+  } catch (error) {
+    console.error(error);
+    return false;
   }
 }
 
-async function getAllAbreviaturas() {
-  const client = await pool.connect();
+async function actualizarAbreviatura(abre_id, variserv_id, abre_descripcion) {
   try {
-    const result = await client.query('SELECT * FROM administracion.abreviaturas');
+    const result = await pool.query('UPDATE administracion.abreviaturas SET variserv_id = $2, abre_descripcion = $3 WHERE abre_id = $1', [abre_id, variserv_id, abre_descripcion]);
+    return result.rowCount > 0;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+}
+
+async function eliminarAbreviatura(abre_id) {
+  try {
+    const result = await pool.query('DELETE FROM administracion.abreviaturas WHERE abre_id = $1', [abre_id]);
+    return result.rowCount > 0;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+}
+
+async function obtenerAbreviaturas() {
+  try {
+    const result = await pool.query('SELECT * FROM administracion.abreviaturas');
     return result.rows;
-  } finally {
-    client.release();
+  } catch (error) {
+    console.error(error);
+    return [];
   }
 }
-async function eliminarAbreviatura(id) {
-  const client = await pool.connect();
-  try {
-    const deleteQuery = 'DELETE FROM administracion.abreviaturas WHERE abre_id = $1';
-    await client.query(deleteQuery, [id]);
-    return { message: 'Registro eliminado correctamente' };
-  } finally {
-    client.release();
-  }
-}
-
-// Resto de las funciones CRUD adaptadas a esquemas...
 
 module.exports = {
   insertarAbreviatura,
-  getAllAbreviaturas,
+  actualizarAbreviatura,
   eliminarAbreviatura,
-  // Resto de las funciones CRUD...
+  obtenerAbreviaturas,
 };

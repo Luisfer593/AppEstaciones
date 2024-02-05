@@ -1,14 +1,16 @@
 // /src/modules/variableservidor/routes/variableservidorRoutes.js
-
 const express = require('express');
-const VariableservidorController = require('../controllers/variableservidorController');
+const VariableServidorController = require('../controllers/variableservidorController');
 
 const router = express.Router();
 
-router.post('/variableservidor', VariableservidorController.addVariableservidor);
-router.get('/variableservidor', VariableservidorController.getAllVariableservidor);
-router.get('/variableservidor/:variserv_id', VariableservidorController.getVariableservidorById);
-router.put('/variableservidor/:variserv_id', VariableservidorController.updateVariableservidorById);
-router.delete('/variableservidor/:variserv_id', VariableservidorController.deleteVariableservidorById);
+router.get('/variableservidor/lista', VariableServidorController.obtenerVariableServidorLista);
+router.get('/variableservidor/:id_variserv', VariableServidorController.obtenerVariableServidorById);
+router.get('/variableservidor/abreviatura/:strabreviatura', VariableServidorController.obtenerVariableServidorByAbreviatura);
+router.get('/variableservidor/unidmedi/:id_unidmedi', VariableServidorController.obtenerVariableServidorByIdUnidMedi);
+router.get('/variableservidor/comprobarabreviatura/:strabreviatura', VariableServidorController.comprobarAbreviatura);
+router.post('/variableservidor', VariableServidorController.insertarVariableServidor);
+router.put('/variableservidor', VariableServidorController.actualizarVariableServidor);
+router.delete('/variableservidor/:id_variserv', VariableServidorController.eliminarVariableServidor);
 
 module.exports = router;

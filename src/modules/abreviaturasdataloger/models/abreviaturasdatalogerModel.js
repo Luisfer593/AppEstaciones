@@ -1,32 +1,48 @@
 const pool = require('../../../db/db');
 
-async function addAbreviaturaDataloger(abredata_id, varidata_id, abredata_descripcion) {
-  const client = await pool.connect();
+async function insertarAbreviatura(varidata_id, abredata_descripcion) {
   try {
-    const result = await client.query(
-      'INSERT INTO administracion.abreviaturasdataloger (abredata_id, varidata_id, abredata_descripcion) VALUES ($1, $2, $3) RETURNING *',
-      [abredata_id, varidata_id, abredata_descripcion]
-    );
-    return result.rows[0];
-  } finally {
-    client.release();
+    const result = await pool.query('SELECT administracion.fn_insertar_abreviaturasdataloger($1, $2) as success', [varidata_id, abredata_descripcion]);
+    return result.rows[0].success;
+  } catch (error) {
+    console.error(error);
+    return false;
   }
 }
 
-async function getAllAbreviaturasDataloger() {
-  const client = await pool.connect();
+async function actualizarAbreviatura(abredata_id, varidata_id, abredata_descripcion) {
   try {
-    const result = await client.query('SELECT * FROM administracion.abreviaturasdataloger');
+    const result = await pool.query('UPDATE administracion.abreviaturasdataloger SET varidata_id = $2, abredata_descripcion = $3 WHERE abredata_id = $1', [abredata_id, varidata_id, abredata_descripcion]);
+    return result.rowCount > 0; // Retorna true si se realizó la actualización correctamente
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+}
+
+async function eliminarAbreviatura(abredata_id) {
+  try {
+    const result = await pool.query('DELETE FROM administracion.abreviaturasdataloger WHERE abredata_id = $1', [abredata_id]);
+    return result.rowCount > 0; // Retorna true si se realizó la eliminación correctamente
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+}
+
+async function obtenerAbreviaturas() {
+  try {
+    const result = await pool.query('SELECT * FROM administracion.abreviaturasdataloger');
     return result.rows;
-  } finally {
-    client.release();
+  } catch (error) {
+    console.error(error);
+    return [];
   }
 }
-
-// Puedes agregar más funciones CRUD según sea necesario
 
 module.exports = {
-  addAbreviaturaDataloger,
-  getAllAbreviaturasDataloger,
-  // Resto de las funciones CRUD...
+  insertarAbreviatura,
+  actualizarAbreviatura,
+  eliminarAbreviatura,
+  obtenerAbreviaturas,
 };
