@@ -84,10 +84,21 @@ async function obtenerEstaciones() {
     return [];
   }
 }
+async function obtenerEstacionesChimborazo() {
+  try {
+      const sql = 'SELECT * FROM administracion.fn_estaciones_chimborazo()';
+      const result = await pool.query(sql);
+      return result.rows;
+  } catch (error) {
+      console.error('Error al obtener las estaciones de Chimborazo:', error);
+      return [];
+  }
+}
 
 module.exports = {
   insertarEstacion,
   actualizarEstacion,
   eliminarEstacion,
   obtenerEstaciones,
+  obtenerEstacionesChimborazo,
 };

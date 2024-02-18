@@ -10,5 +10,7 @@ router.delete('/sensores/:sens_id', SensoresController.eliminarSensores);
 router.get('/sensores', SensoresController.obtenerSensores);
 
 // Otras rutas según sea necesario
+router.get('/sensores/:id', SensoresController.obtenerSensoresById);
+router.get('/sensores/estacion/:idEstacion', SensoresController.obtenerSensoresByEstacionId);
 
 module.exports = router;

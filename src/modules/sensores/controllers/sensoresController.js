@@ -1,5 +1,5 @@
 // /src/modules/sensores/controllers/sensoresController.js
-const SensoresModel = require('../models/sensoresModel');
+const SensoresModel = require('../models/sensoresModel/');
 
 async function insertarSensores(req, res) {
   try {
@@ -44,9 +44,33 @@ async function obtenerSensores(req, res) {
   }
 }
 
+async function obtenerSensoresById(req, res) {
+  try {
+      const { id } = req.params;
+      const sensores = await SensoresModel.obtenerSensoresById(id);
+      res.status(200).json(sensores);
+  } catch (error) {
+      console.error('Error en obtenerSensoresById:', error);
+      res.status(500).json({ error: 'Error interno del servidor' });
+  }
+}
+
+async function obtenerSensoresByEstacionId(req, res) {
+  try {
+      const { idEstacion } = req.params;
+      const sensores = await SensoresModel.obtenerSensoresByEstacionId(idEstacion);
+      res.status(200).json(sensores);
+  } catch (error) {
+      console.error('Error en obtenerSensoresByEstacionId:', error);
+      res.status(500).json({ error: 'Error interno del servidor' });
+  }
+}
+
 module.exports = {
   insertarSensores,
   actualizarSensores,
   eliminarSensores,
   obtenerSensores,
+  obtenerSensoresById,
+  obtenerSensoresByEstacionId,
 };

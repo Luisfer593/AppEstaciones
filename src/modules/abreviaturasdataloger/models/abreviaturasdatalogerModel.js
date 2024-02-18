@@ -1,3 +1,5 @@
+// /src/modules/abreviaturasdataloger/models/abreviaturasdatalogerModel.js
+
 const pool = require('../../../db/db');
 
 async function insertarAbreviatura(varidata_id, abredata_descripcion) {
@@ -39,10 +41,23 @@ async function obtenerAbreviaturas() {
     return [];
   }
 }
+async function obtenerVariablesDatalogerByAbreviatura(abreviatura) {
+  try {
+      const client = await pool.connect();
+      const query = 'SELECT * FROM administracion.fn_verifica_abreviatura_dataloger_by_abreviatura($1)';
+      const result = await client.query(query, [abreviatura]);
+      client.release();
+      return result.rows;
+  } catch (error) {
+      console.error('Error en obtenerVariablesDatalogerByAbreviatura:', error);
+      throw error;
+  }
+}
 
 module.exports = {
   insertarAbreviatura,
   actualizarAbreviatura,
   eliminarAbreviatura,
   obtenerAbreviaturas,
+  obtenerVariablesDatalogerByAbreviatura,
 };

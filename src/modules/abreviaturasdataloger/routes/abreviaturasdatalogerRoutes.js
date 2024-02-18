@@ -9,5 +9,6 @@ router.delete('/abreviaturasdataloger/:abredata_id', AbreviaturasDatalogerContro
 router.get('/abreviaturasdataloger', AbreviaturasDatalogerController.obtenerAbreviaturas);
 
 // Otras rutas según sea necesario
+router.get('/abreviaturas/:abreviatura', AbreviaturasDatalogerController.obtenerVariablesDatalogerByAbreviatura);
 
 module.exports = router;

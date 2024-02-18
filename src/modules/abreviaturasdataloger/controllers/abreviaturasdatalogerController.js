@@ -43,9 +43,21 @@ async function obtenerAbreviaturas(req, res) {
   }
 }
 
+async function obtenerVariablesDatalogerByAbreviatura(req, res) {
+  try {
+      const { abreviatura } = req.params;
+      const variables = await AbreviaturasDatalogerModel.obtenerVariablesDatalogerByAbreviatura(abreviatura);
+      res.status(200).json(variables);
+  } catch (error) {
+      console.error('Error en obtenerVariablesDatalogerByAbreviatura:', error);
+      res.status(500).json({ error: 'Error interno del servidor' });
+  }
+}
+
 module.exports = {
   insertarAbreviatura,
   actualizarAbreviatura,
   eliminarAbreviatura,
   obtenerAbreviaturas,
+  obtenerVariablesDatalogerByAbreviatura,
 };

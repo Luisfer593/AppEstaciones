@@ -1,4 +1,6 @@
+
 // /src/modules/estacion/controllers/estacionController.js
+
 const EstacionModel = require('../models/estacionModel');
 
 async function insertarEstacion(req, res) {
@@ -67,9 +69,20 @@ async function obtenerEstaciones(req, res) {
   }
 }
 
+async function obtenerEstacionesChimborazo(req, res) {
+  try {
+      const estaciones = await EstacionModel.obtenerEstacionesChimborazo();
+      res.status(200).json(estaciones);
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Internal Server Error' });
+  }
+}
+
 module.exports = {
   insertarEstacion,
   actualizarEstacion,
   eliminarEstacion,
   obtenerEstaciones,
+  obtenerEstacionesChimborazo,
 };

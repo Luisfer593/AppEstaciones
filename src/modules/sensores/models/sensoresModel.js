@@ -52,10 +52,37 @@ async function obtenerSensores() {
     return [];
   }
 }
+async function obtenerSensoresById(idSensor) {
+  try {
+      const client = await pool.connect();
+      const query = 'SELECT sens_id, esta_id, marc_id, sens_nombre, sens_modelo, sens_numeroserie, sens_estado, sens_especificacion FROM administracion.sensores WHERE sens_id = $1';
+      const result = await client.query(query, [idSensor]);
+      client.release();
+      return result.rows;
+  } catch (error) {
+      console.error('Error en obtenerSensoresById:', error);
+      throw error;
+  }
+}
+
+async function obtenerSensoresByEstacionId(idEstacion) {
+  try {
+      const client = await pool.connect();
+      const query = 'SELECT sens_id FROM administracion.sensores WHERE esta_id = $1 AND sens_estado = $2';
+      const result = await client.query(query, [idEstacion, 'Operativo']);
+      client.release();
+      return result.rows;
+  } catch (error) {
+      console.error('Error en obtenerSensoresByEstacionId:', error);
+      throw error;
+  }
+}
 
 module.exports = {
   insertarSensores,
   actualizarSensores,
   eliminarSensores,
   obtenerSensores,
+  obtenerSensoresById,
+  obtenerSensoresByEstacionId,
 };
