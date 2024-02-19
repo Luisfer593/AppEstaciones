@@ -1,10 +1,16 @@
-// /src/app.js
-
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const multer = require('multer');
-const ProcesarCSV = require('./modules/extras/ProcesarCSV');
+const fs = require('fs');
+const csv = require('csv-parser');
+const ProcesarCSV = require('./modules/extras/ProcesarCSV'); // Importa el módulo ProcesarCSV.js
+
+const app = express();
+const port = 3500;
+
+// Configura cors y bodyParser
+app.use(cors());
+app.use(bodyParser.json());
 
 // Importar las rutas de los módulos creados
 const adminsRoutes = require('./modules/admins/routes/adminsRoutes');
@@ -42,16 +48,7 @@ const FDatoCrudoDatalogerM10Routes = require('./modules/funciones/FDatoCrudoData
 const FDatoCrudoDatalogerM11Routes = require('./modules/funciones/FDatoCrudoDatalogerM11');
 const FDatoCrudoDatalogerM12Routes = require('./modules/funciones/FDatoCrudoDatalogerM12');
 
-const app = express();
-const port = 4000;
-
-// Configura cors
-app.use(cors());
-app.use(bodyParser.json());
-// Configurar multer para manejar archivos multipart/form-data
-const upload = multer();
-
-// Usar las rutas del router adminsRoutes
+// Usar las rutas de los módulos
 app.use('/api', adminsRoutes);
 app.use('/api', equipoRoutes);
 app.use('/api', mantenimientoRoutes);
@@ -62,7 +59,6 @@ app.use('/api', cantonRoutes);
 app.use('/api', parroquiaRoutes);
 app.use('/api', comunidadRoutes);
 app.use('/api', tipoestacionRoutes);
-// Usa las rutas del módulo estacionRoutes
 app.use('/api', estacionRoutes);
 app.use('/api', observacionestacionRoutes);
 app.use('/api', marcaRoutes);
@@ -75,7 +71,6 @@ app.use('/api', variableservidorRoutes);
 app.use('/api', sens_variservRoutes);
 app.use('/api', abreviaturasRoutes);
 app.use('/api', abreviaturasdatalogerRoutes);
-// Usa las rutas del módulo FDatoCrudoDatalogerM12
 app.use('/api', FDatoCrudoDatalogerM1Routes);
 app.use('/api', FDatoCrudoDatalogerM2Routes);
 app.use('/api', FDatoCrudoDatalogerM3Routes);
@@ -89,26 +84,26 @@ app.use('/api', FDatoCrudoDatalogerM10Routes);
 app.use('/api', FDatoCrudoDatalogerM11Routes);
 app.use('/api', FDatoCrudoDatalogerM12Routes);
 
-// Ruta para cargar datos desde un archivo CSV
-app.post('/api/cargar-datos-csv', upload.single('file'), (req, res) => {
-  if (!req.file) {
-    return res.status(400).json({ error: 'No se ha proporcionado ningún archivo CSV' });
-  }
+// Endpoint para cargar un archivo CSV y procesarlo
+app.post('/api/cargar-csv', async (req, res) => {
+    const { estacion, pathfile } = req.body; // Suponiendo que recibes el id de la estación y la ruta del archivo en el body
 
-  const pathfile = req.file.path; // Obtener la ruta del archivo temporal
-
-  // Procesar el archivo CSV y devolver la respuesta
-  const success = ProcesarCSV.procesarArchivoCSV(req.body.estacion, pathfile);
-  if (success) {
-    res.status(200).json({ message: 'Datos del archivo CSV procesados y guardados correctamente' });
-  } else {
-    res.status(500).json({ error: 'Error al procesar y guardar los datos del archivo CSV' });
-  }
+    try {
+        const resultado = await ProcesarCSV.procesarArchivoCSV(estacion, pathfile); // Llama a la función para procesar el archivo CSV
+        if (resultado) {
+            res.status(200).send('Archivo CSV procesado correctamente.');
+        } else {
+            res.status(500).send('Error al procesar el archivo CSV.');
+        }
+    } catch (error) {
+        console.error('Error al procesar el archivo CSV:', error);
+        res.status(500).send('Error interno del servidor.');
+    }
 });
 
 app.listen(port, () => {
   console.log(`Servidor corriendo en http://localhost:${port}`);
 });
 
-// Exporta 'upload' para que pueda ser utilizado en otros archivos
-module.exports = { app, upload };
+// Exportar 'app' para que pueda ser utilizado en otros archivos
+module.exports = app;

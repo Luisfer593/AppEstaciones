@@ -1,5 +1,6 @@
 // /src/modules/sensores/controllers/sensoresController.js
-const SensoresModel = require('../models/sensoresModel/');
+const SensoresModel = require('../models/sensoresModel');
+
 
 async function insertarSensores(req, res) {
   try {
