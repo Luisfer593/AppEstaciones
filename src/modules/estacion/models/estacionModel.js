@@ -75,13 +75,22 @@ async function eliminarEstacion(esta_id) {
   }
 }
 
-async function obtenerEstaciones() {
+/*async function obtenerEstaciones() {
   try {
     const result = await pool.query('SELECT * FROM administracion.estacion');
     return result.rows;
   } catch (error) {
     console.error(error);
     return [];
+  }
+}*/
+async function obtenerEstaciones() {
+  try {
+      const result = await pool.query('SELECT esta_id AS id, esta_nombre AS nombre FROM administracion.estacion');
+      return result.rows;
+  } catch (error) {
+      console.error(error);
+      return [];
   }
 }
 async function obtenerEstacionesChimborazo() {
