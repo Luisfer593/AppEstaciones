@@ -32,11 +32,13 @@ const GetSenroIDBySensorIDVarID = FSensVariDataLogg.GetSenroIDBySensorIDVarID;
 class FuncionesExtras {
 
     static async NoExisteCodigoDatoCrudoDL(objDCDL) {
-        console.log("Objeto:", objDCDL); // Cambia "objeto" a "objDCDL"
-        console.log("Propiedad obtenerMes:", objDCDL.obtenerMes); // Cambia "objeto" a "objDCDL"
+        //console.log("Objeto:", objDCDL); // Cambia "objeto" a "objDCDL"
+        //console.log("Propiedad obtenerMes:", objDCDL.obtenerMes); // Cambia "objeto" a "objDCDL"
         try {
+            console.log("Valor de objDCDL antes de llamar a NoExisteCodigoDatoCrudoDL:", objDCDL);
+NoExisteCodigoDatoCrudoDL(objDCDL);
             if (!objDCDL || !objDCDL.datocruddatam_fecha) {
-                console.error('El objeto objDCDL no es válido o falta la propiedad datocruddatam_fecha.');
+                //console.error('El objeto objDCDL no es válido o falta la propiedad datocruddatam_fecha.');
                 return false;
             }
             
@@ -163,43 +165,7 @@ class FuncionesExtras {
         }
         return resp;
     }
-/*
-    static GeneraCodigoDL(fecha, hora, id_var, id_esta) {
-        let codigoDL = null;
-        codigoDL = "DL" + fecha + hora + id_var + id_esta;
-        return codigoDL;
-    }
 
-    static GetStringFecha(fechaStr) {
-        if (!fechaStr) {
-            console.log("La fecha es nula o indefinida.");
-            return null;
-        }
-        
-        const arrayFecha = fechaStr.split("-");
-        if (arrayFecha.length !== 3) {
-            console.log("La fecha no tiene el formato esperado.");
-            return null;
-        }
-    
-        return arrayFecha.join('');
-    }
-    
-    static GetStringHora(horaStr) {
-        if (!horaStr) {
-            console.log("La hora es nula o indefinida.");
-            return null;
-        }
-    
-        const arrayHora = horaStr.split(":");
-        if (arrayHora.length !== 3) {
-            console.log("La hora no tiene el formato esperado.");
-            return null;
-        }
-    
-        return arrayHora.join('');
-    }
-*/
     static GeneraCodigoDL(fecha, hora, id_var, id_esta) {
         let codigoDL = null;
         if (!fecha || !hora) {
@@ -237,43 +203,73 @@ class FuncionesExtras {
             console.log("La fecha es nula o indefinida.");
             return null;
         }
+        
         console.log("Valor de fechaIn en ConvertirFormatoFecha:", fechaIn);
+        
+        // Verificar si la fecha ya está en el formato esperado (YYYY-MM-DD)
+        if (/^\d{4}-\d{2}-\d{2}$/.test(fechaIn)) {
+            console.log("La fecha ya está en el formato esperado.");
+            return fechaIn;
+        }
+    
         // Dividir la fecha utilizando el delimitador "/"
-        const fechaHora = fechaIn.split('/');
-        const fecha = fechaHora[0];
-        console.log("Fecha extraída:", fecha);
-        // Formatear la fecha correctamente
-        const fechaFormateada = moment(fecha, 'M/D/YY').format('YYYYMMDD');
+        const partesFecha = fechaIn.split('/');
+    
+        // Verificar si hay tres partes (mes, día, año)
+        if (partesFecha.length !== 3) {
+            console.log("La fecha no tiene el formato esperado.");
+            return null;
+        }
+    
+        // Extraer año, mes y día
+        const año = '20' + partesFecha[2]; // Agregar '20' al año
+        const mes = partesFecha[0].padStart(2, '0'); // Asegurar que el mes tenga dos dígitos
+        const dia = partesFecha[1].padStart(2, '0'); // Asegurar que el día tenga dos dígitos
+        
+        // Construir la fecha en el formato deseado (YYYY-MM-DD)
+        const fechaFormateada = `${año}-${mes}-${dia}`;
+        
         console.log("Fecha formateada:", fechaFormateada);
+    
         return fechaFormateada;
     }
+
     static ConvertirFormatoHora24(horaIn) {
-        console.log("Valor de horaIn recibido en ConvertirFormatoHora24:", horaIn); // Agregar este console.log
-        
         if (!horaIn) {
             console.log("La hora es nula o indefinida.");
             return null;
         }
         
-        // Separar la hora, minutos y segundos del AM/PM
-        const horaMinSegAMPM = horaIn.split(':');
-        const hora = parseInt(horaMinSegAMPM[0], 10);
-        const ampm = horaMinSegAMPM[1].split(' ')[1]; // Obtener el AM/PM
+        console.log("Valor de horaIn en ConvertirFormatoHora24:", horaIn);
         
-        // Convertir la hora a formato 24h
-        let horaFormato24;
-        if (ampm === 'AM' && hora === 12) {
-            horaFormato24 = '00' + horaMinSegAMPM[1].split(' ')[0];
-        } else if (ampm === 'PM' && hora !== 12) {
-            horaFormato24 = (hora + 12).toString().padStart(2, '0') + horaMinSegAMPM[1].split(' ')[0];
-        } else {
-            horaFormato24 = hora.toString().padStart(2, '0') + horaMinSegAMPM[1].split(' ')[0];
+        // Verificar si la hora ya está en el formato esperado (HH:MM:SS)
+        if (/^\d{2}:\d{2}:\d{2} (AM|PM)$/.test(horaIn)) {
+            console.log("La hora ya está en el formato esperado.");
+            // Eliminar el AM o PM de la hora
+            horaIn = horaIn.slice(0, -3);
+        }
+    
+        // Dividir la hora utilizando el delimitador ":"
+        const partesHora = horaIn.split(':');
+        
+        // Verificar si hay tres partes (horas, minutos, segundos)
+        if (partesHora.length !== 3) {
+            console.log("La hora no tiene el formato esperado.");
+            return null;
         }
         
-        console.log("Hora en formato 24h:", horaFormato24);
-        return horaFormato24;
-    }
+        let horas = partesHora[0].padStart(2, '0'); // Asegurar que las horas tengan dos dígitos
+        const minutos = partesHora[1].padStart(2, '0'); // Asegurar que los minutos tengan dos dígitos
+        const segundos = partesHora[2].padStart(2, '0'); // Asegurar que los segundos tengan dos dígitos
+        
+        // Construir la hora en el formato deseado (HH:MM:SS)
+        const horaFormateada = `${horas}:${minutos}:${segundos}`;
+        
+        console.log("Hora formateada:", horaFormateada);
     
+        return horaFormateada;
+    }
+
     static ObtenerSegundos(segundos) {
         if (!segundos) {
             console.log("El valor de segundos es undefined o null.");

@@ -60,9 +60,7 @@ async function procesarArchivoCSV(estacion, pathfile) {
                     if (idSensor !== 0) {
                         objDatoCrudoDataloger = new DatoCrudoDatalogerM();
                         objDatoCrudoDataloger.setDatocruddatam_id(GeneraCodigoDL(GetStringFecha(fechaStr), GetStringHora(horaStr), idVarviableDL, esta_id));
-
-
-
+                        
                         objDatoCrudoDataloger.setEsta_id(esta_id);
                         objDatoCrudoDataloger.setVaridata_id(idVarviableDL);
                         objDatoCrudoDataloger.setSens_id(idSensor);
